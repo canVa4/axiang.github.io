@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://canva4.github.io/"/>
-  <updated>2020-08-08T13:01:59.970Z</updated>
+  <updated>2020-08-13T12:55:43.187Z</updated>
   <id>http://canva4.github.io/</id>
   
   <author>
@@ -15,6 +15,92 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CS231n Assignment2 实现时遇到的问题</title>
+    <link href="http://canva4.github.io/2020/08/12/CS231n-Assignment2-%E5%AE%9E%E7%8E%B0%E6%97%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+    <id>http://canva4.github.io/2020/08/12/CS231n-Assignment2-%E5%AE%9E%E7%8E%B0%E6%97%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/</id>
+    <published>2020-08-12T09:16:42.000Z</published>
+    <updated>2020-08-13T12:55:43.187Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="CS231n-Assignment2-遇到的问题"><a href="#CS231n-Assignment2-遇到的问题" class="headerlink" title="CS231n Assignment2 遇到的问题"></a>CS231n Assignment2 遇到的问题</h1><ul><li><p>实现基于2019年版的课程</p></li><li><p>主要记录遇到的问题</p><h2 id="Fully-connected-Neural-Network"><a href="#Fully-connected-Neural-Network" class="headerlink" title="Fully-connected Neural Network"></a>Fully-connected Neural Network</h2></li></ul><p>相比于Assignment1，对于整个网络的实现进行了进一步的封装，可以实现任意深度，大小的MLP。</p><div class="note info">            <p>值得一看的代码部分！solver.py中实现调用更新规则函数（在optim.py中实现），实现的很有趣！</p>          </div><p>基本思路为：使用getattr获取定义在optim.py中定义好的update rule函数！我是第一次见这种写法，感觉很巧妙，值得学习一波:)</p><p>当然，要先import optim。</p><p>Core Code(extract):</p><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">self.update_rule = kwargs.pop(<span class="string">&#x27;update_rule&#x27;</span>, <span class="string">&#x27;sgd&#x27;</span>)</span><br><span class="line">...</span><br><span class="line">   <span class="comment"># Make sure the update rule exists, then replace the string</span></span><br><span class="line">   <span class="comment"># name with the actual function</span></span><br><span class="line">   <span class="keyword">if</span> <span class="keyword">not</span> hasattr(optim, self.update_rule):</span><br><span class="line">       <span class="keyword">raise</span> ValueError(<span class="string">&#x27;Invalid update_rule &quot;%s&quot;&#x27;</span> % self.update_rule)</span><br><span class="line">self.update_rule = getattr(optim, self.update_rule)</span><br></pre></td></tr></table></figure><p>其余部分的实现（如：affine，ReLU的forward和backward；优化算法）注意好细节后都比较容易实现，因为比较复杂的代码框架已经提供好了。</p><p>值得注意的是，官方github仓库中的关于课程内容的markdown笔记值得一读。<a href="http://github.com/cs231n/cs231n.github.io" title="官方课程github仓库">课程github仓库</a>. </p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;CS231n-Assignment2-遇到的问题&quot;&gt;&lt;a href=&quot;#CS231n-Assignment2-遇到的问题&quot; class=&quot;headerlink&quot; title=&quot;CS231n Assignment2 遇到的问题&quot;&gt;&lt;/a&gt;CS231n Assignm
+      
+    
+    </summary>
+    
+    
+      <category term="Notes" scheme="http://canVa4.github.io/categories/Notes/"/>
+    
+    
+      <category term="CS231n" scheme="http://canVa4.github.io/tags/CS231n/"/>
+    
+      <category term="python" scheme="http://canVa4.github.io/tags/python/"/>
+    
+      <category term="numpy" scheme="http://canVa4.github.io/tags/numpy/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>单片机解决方案调研</title>
+    <link href="http://canva4.github.io/2020/08/12/%E5%8D%95%E7%89%87%E6%9C%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%B0%83%E7%A0%94/"/>
+    <id>http://canva4.github.io/2020/08/12/%E5%8D%95%E7%89%87%E6%9C%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%B0%83%E7%A0%94/</id>
+    <published>2020-08-12T02:35:36.000Z</published>
+    <updated>2020-08-17T09:13:38.005Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="单片机解决方法调研"><a href="#单片机解决方法调研" class="headerlink" title="单片机解决方法调研"></a>单片机解决方法调研</h1><p>目标：<strong>模块化强；底层开发难度低、成本低；低功耗（电池供电）；支持无线通信；具有一定的算力</strong></p><p>本文主要讨论3种不同解决方案。Arduino，stm32和C51系列。列出的这三种都是我有过使用经历的。我经验较多的是stm32，没有用arduino做过比较大型的东西。</p><p>实际上三者并不能直接比较，Arduino算是一个平台，他的早期，也是最广泛的核心是基于AVR单片机（这种芯片我没单独用过）。</p><p>后两者stm32与C51则是两种特定系列的单片机了。</p><table><thead><tr><th></th><th>Arduino</th><th>stm32</th><th>C51</th></tr></thead><tbody><tr><td>模块化</td><td>强（有很多各种各样现成的模块）</td><td>中（配合开发板使用，可以达到部分模块化的效果）</td><td>中（同stm32）</td></tr><tr><td>运算能力</td><td>中（<strong>调研未完成</strong>）</td><td>中、高</td><td>低</td></tr><tr><td>功耗</td><td>低、电池供电足够</td><td>低（极低）、电池供电足够</td><td>极低、电池供电足够</td></tr><tr><td>开发难度</td><td>低、开发速度快、代码易于迭代更新，不必考虑寄存器层面编程</td><td>较高（寄存器复杂，但ST提供封装的的库函数）</td><td>中（硬件资源少，编程难度高）</td></tr><tr><td>价格</td><td>高</td><td>中</td><td>极低</td></tr><tr><td>支持无线通信</td><td>支持</td><td>支持</td><td>支持</td></tr><tr><td>优点</td><td>开放周期较短，模块化强，代码移植性强，社区丰富</td><td>功能强大，增加功能灵活，社区丰富</td><td>极其便宜，功耗低</td></tr><tr><td>缺点</td><td>扩展模块可选有限；算力有限；<strong>比较新的支持stm32的板子还未调研</strong></td><td>开发难度大；程序移植性差；</td><td>算力低下，框架老旧</td></tr><tr><td>总结&amp;建议</td><td><strong>可选方案</strong>。方便开发，算力比较OK；但价格较高。</td><td><strong>可选方案</strong>。芯片功能极其强大；但开发周期和难度可能较长。</td><td>不建议使用，如果要批量生成且算力要求不高，可以考虑</td></tr></tbody></table><p>TODO：</p><ul><li><strong>Arduino比较新的支持stm32的板子的调研</strong></li><li>stm32扩展模块的调研</li><li>初步分别设计一套Arduino方案和STM32方案</li></ul><h2 id="Arduino"><a href="#Arduino" class="headerlink" title="Arduino"></a>Arduino</h2><p>Arduino准确的说是一个单片机及其外设的集合，比较经典板子的主控是ATMEL出的AVR单片机，比51系列性能强一点。这个集合之所以出名在于其操作简单，不需要涉及很多底层、寄存器层面的编程。例如，stm32库函数的一大堆命令，在这里只需要一句即可完成功能，并且有相当丰富的外设模块。</p><p>总体而言做原型，快速开发的时候，硬件搭设方便，基本不用去设计电路板，画板子之类的，基本上导线连接模块就OK了。代码比较简单易懂的。基本不涉及到寄存器级的操作。总得来说就是开发快。小量定制化还是划算，做产品或者较多数量的成本很高；且由于其代码的高度封装会导致程序效率底下以及资源开销大。</p><p>我个人对于Arduino的使用不是很多，还需进一步调研。</p><p>该图为比较常见的Arduino型号的单片机的性能参数。<a href="https://www.arduino.cn/thread-42417-1-1.html">原文链接</a> 原文发布于2017年</p><p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2020/08/17/aodKOxTjRWQztpb.jpg" alt="211543xjgg8attjataqkgk"></p><h2 id="STM32系列单片机"><a href="#STM32系列单片机" class="headerlink" title="STM32系列单片机"></a>STM32系列单片机</h2><p>stm32是st半导体公司向arm公司购买了核心(嵌入式)版权，加上自己的外设生产的一个系列的芯片。其特点是：功能强大、速度快、外设多。STM32比较常见的框架是ARM CORTEX-m3或m4。并且其：寄存器复杂，直接用汇编操作比较麻烦，但ST官方了提供封装的的库函数，现在还出了专门的代码生成软件cube来简化操作。</p><p>一个STM32常用型号之间对比：<a href="https://blog.csdn.net/ybhuangfugui/article/details/88266385">https://blog.csdn.net/ybhuangfugui/article/details/88266385</a></p><p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2020/08/17/nkjBiR6fT2lSQb7.jpg" alt="en.microcontrollers_FM141.jpg"></p><p>上图为ST官网对于其系列芯片的简介与分类。</p><p>我对于STM32系列芯片的使用比较有经验，我使用的型号为主要为：STM32F1系列和F4系列。</p><p>STM32F407这款芯片，使我们机器人队使用的主控芯片，其最高主频可达<strong>168MHz</strong>（远远大于Arduino的常见型号的16MHz），可见其算力的强大。</p><p>我们队内并没有使用STM32系列的开发板，而是买了裸的芯片，之后自己设计了电路板（设计部分我不是很擅长），画板子、印板子、焊板子、改板子这样进行开发，导致开发一代新的主控板周期比较长。</p><p>不过市面上也有很多STM32现成的开发板，预留了很多IO接口，初步观察感觉基本满足需求，价格适中，如STM32F4系列的开发板不足100元。使用这种开发板一般也不需要自己设计电路，只需购买不同的模块即可交互使用。</p><center class="half">    <img src= "/img/loading.gif" data-lazy-src=https://i.loli.net/2020/08/17/7DGvqR42cTMiNVA.jpg width="500"/><img src= "/img/loading.gif" data-lazy-src=https://i.loli.net/2020/08/17/gTPjAvzL4KEnIFC.jpg width="400"/> </center><p>左图的为我近期购买的STM32F1系列的的开发板；右图为STM32F4系列的开发板。例如左边的F1开发板，可以看到这种开发板也像Arduino一样支持很多的扩展功能，而且只需要插接即可。</p><p>整体而言，使用STM32系列也绝对可以实现我们的预期目标，使用开发板也基本可以避免电路的设计等工作。由于STM32系列芯片本身功能强大，其上限应该是高于Arduino方案的。但其开发难度会比Arduino方案难上不少。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;单片机解决方法调研&quot;&gt;&lt;a href=&quot;#单片机解决方法调研&quot; class=&quot;headerlink&quot; title=&quot;单片机解决方法调研&quot;&gt;&lt;/a&gt;单片机解决方法调研&lt;/h1&gt;&lt;p&gt;目标：&lt;strong&gt;模块化强；底层开发难度低、成本低；低功耗（电池供电）；支持无线
+      
+    
+    </summary>
+    
+    
+      <category term="Works" scheme="http://canVa4.github.io/categories/Works/"/>
+    
+    
+      <category term="单片机" scheme="http://canVa4.github.io/tags/%E5%8D%95%E7%89%87%E6%9C%BA/"/>
+    
+      <category term="arduino" scheme="http://canVa4.github.io/tags/arduino/"/>
+    
+      <category term="STM32" scheme="http://canVa4.github.io/tags/STM32/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python学习杂记(1)</title>
+    <link href="http://canva4.github.io/2020/08/08/Python%E5%AD%A6%E4%B9%A0%E6%9D%82%E8%AE%B0-1/"/>
+    <id>http://canva4.github.io/2020/08/08/Python%E5%AD%A6%E4%B9%A0%E6%9D%82%E8%AE%B0-1/</id>
+    <published>2020-08-08T13:09:52.000Z</published>
+    <updated>2020-08-15T13:03:30.917Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Python学习杂记-1"><a href="#Python学习杂记-1" class="headerlink" title="Python学习杂记(1)"></a>Python学习杂记(1)</h1><p>本篇文章是为了记录进一步学习python时遇到的一些问题和相对陌生的知识点。</p><ul><li><p>range()函数返回的是一个独特的“范围类”对象！</p></li><li><p>for 变量 in 字符串|集合|范围|任何可迭代对象:</p><p> <strong>可迭代对象：指该对象中包含一个–iter–方法</strong></p></li><li><p><strong>isinstance()函数</strong>，判断某个变量是否为指定类型的实例，前一个参数是要判断的变量，后一个参数是类型。如：isinstance(2, int)</p></li><li><p>zip()函数，将多个列表压缩为一个zip对象（可迭代对象），这样就可以使用一个循环遍历两个列表</p></li><li><p>reversed()函数：接受序列（元组、列表、区间等），然后返回一个“反序排列”的迭代器，sorted()类似</p></li><li></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;Python学习杂记-1&quot;&gt;&lt;a href=&quot;#Python学习杂记-1&quot; class=&quot;headerlink&quot; title=&quot;Python学习杂记(1)&quot;&gt;&lt;/a&gt;Python学习杂记(1)&lt;/h1&gt;&lt;p&gt;本篇文章是为了记录进一步学习python时遇到的一些问题
+      
+    
+    </summary>
+    
+    
+      <category term="Notes" scheme="http://canVa4.github.io/categories/Notes/"/>
+    
+    
+      <category term="python" scheme="http://canVa4.github.io/tags/python/"/>
+    
+  </entry>
   
   <entry>
     <title>CS231n Assignment1 实现时遇到的问题</title>
