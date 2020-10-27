@@ -250,4 +250,11 @@
     <priority>0.6</priority>
   </url>
   
+  <url>
+    <loc>http://canva4.github.io/categories/Works/Papers/</loc>
+    <lastmod>2020-10-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
 </urlset>
