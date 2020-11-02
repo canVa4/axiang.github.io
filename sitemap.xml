@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://canva4.github.io/2020/10/23/Crack-Detection-Paper-Reading/</loc>
+    <loc>http://canva4.github.io/2020/10/30/Embedding-Literature-Review/</loc>
     
     <lastmod>2020-11-02</lastmod>
     
   </url>
   
   <url>
-    <loc>http://canva4.github.io/2020/10/30/Embedding-Literature-Review/</loc>
+    <loc>http://canva4.github.io/2020/10/04/Running-Nuerual-Networks-On-Embedding-Systems/</loc>
     
-    <lastmod>2020-10-30</lastmod>
+    <lastmod>2020-11-02</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://canva4.github.io/2020/10/23/Crack-Detection-Paper-Reading/</loc>
+    
+    <lastmod>2020-11-02</lastmod>
     
   </url>
   
@@ -26,13 +33,6 @@
     <loc>http://canva4.github.io/2020/10/27/FFT-idea-for-Displacement-Measurement/</loc>
     
     <lastmod>2020-10-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://canva4.github.io/2020/10/04/Running-Nuerual-Networks-On-Embedding-Systems/</loc>
-    
-    <lastmod>2020-10-20</lastmod>
     
   </url>
   
@@ -250,6 +250,20 @@
   
   <url>
     <loc>http://canva4.github.io/tags/GNN/</loc>
+    <lastmod>2020-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://canva4.github.io/tags/Embedding/</loc>
+    <lastmod>2020-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://canva4.github.io/tags/Literature-Review/</loc>
     <lastmod>2020-11-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
