@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://canva4.github.io/"/>
-  <updated>2020-11-26T13:11:40.834Z</updated>
+  <updated>2020-11-28T16:53:28.525Z</updated>
   <id>http://canva4.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Model Compression Paper Reading</title>
+    <link href="http://canva4.github.io/2020/11/28/Model-Compression-Paper-Reading/"/>
+    <id>http://canva4.github.io/2020/11/28/Model-Compression-Paper-Reading/</id>
+    <published>2020-11-28T03:16:38.000Z</published>
+    <updated>2020-11-28T16:53:28.525Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Model-Compression-Paper-Reading"><a href="#Model-Compression-Paper-Reading" class="headerlink" title="Model Compression Paper Reading"></a>Model Compression Paper Reading</h1><p>Last note is a brief overview of model compression and a summary of learning resources.</p><p>This note is focus on some specific papers and methods.</p><h2 id="Total-LIST"><a href="#Total-LIST" class="headerlink" title="Total LIST:"></a>Total LIST:</h2><ol><li>Distilling the Knowledge in a Neural Network 2015 知识蒸馏开山之作</li></ol><h1 id="Knowledge-Distillation"><a href="#Knowledge-Distillation" class="headerlink" title="Knowledge Distillation"></a>Knowledge Distillation</h1><p>本部分主要关注Knowledge Distillation(简记为KD).</p><p><strong>LIST:</strong></p><ol><li>Distilling the Knowledge in a Neural Network 2015</li></ol><h2 id="Distilling-the-Knowledge-in-a-Neural-Network"><a href="#Distilling-the-Knowledge-in-a-Neural-Network" class="headerlink" title="Distilling the Knowledge in a Neural Network"></a>Distilling the Knowledge in a Neural Network</h2><p>Author: Geoffrey Hinton er al  <a href="https://arxiv.org/pdf/1503.02531.pdf">LINK</a></p><p>Conference: CVPR 2015</p><p>KEY WORDS: <strong>知识蒸馏(Knowledge Distillation )开山之作</strong></p><p>知识蒸馏的目的就是将大模型原有的知识，让一个小模型也学会。</p><p>正常我们在训练一个图片分类的任务中最后会使用cross entropy这个损失函数，最后学的模型可以的输出一个概率分布（softmax的结果），真实label出现的概率最大，其他的概率相对很小。这个结果，我们成为soft target，他其中包含了比原始label更多的信息，比如在MNIST上可能不大合适。因此，一个网络训练好之后，对于正确的答案会有一个很高的置信度。例如，在MNIST数据中，对于某个2的输入，对于2的预测概率会很高，而对于2类似的数字，例如3和7的预测概率为1e-6 和 1e-9。显然soft target包含了更多的信息。</p><p>但是如果直接学习这个概率分布，其小类别的概率太小了，作者引入了<strong>temperature</strong>来解决这个问题，直观的来讲，就是可以将小类别的概率输出的结果变大，但仍然小于真实label的概率。</p><p>下图就是引入temperature后的softmax. T越大会产生更softer的分布。</p><p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2020/11/28/QDOZEz7my8S1Jjo.png" alt="image-20201128233002251"></p><p>如果T接近于0，则最大的值会越近1，其它值会接近0，近似于onehot编码。如果T越大，则输出的结果的分布越平缓，相当于平滑的一个作用，起到保留相似信息的作用。如果T等于无穷，就是一个均匀分布。</p><p>整体的过程就是先训练好一个teacher，之后将teacher的softmax换用带temperature的softmax，并将训练数据输入，记录下来训练数据的结果。再使用训练数据训练student网络，student网络也使用相同的temperature。训练好后，在去除temperature，即将temperature设为1。</p><p>当soft target具有较高的熵时，与硬目标（真实label）相比，它们在每个训练样本中提供的信息更多，并且训练样本之间的梯度差异较小，因此，相比于原始的繁琐模型，小型模型通常可以在少得多的数据上进行训练，并且使用更高的学习率。</p><p><strong>Loss</strong></p><p>如果我们也知道训练数据的真实label，只用这种加权和形式的损失函数会有更好的效果。训练小网络时的loss为：</p><p>$$L = CE(y,p) + \alpha CE(q,p)$$</p><p>在这篇论文中，作者认为可以将模型看成是黑盒子，知识可以看成是输入到输出的映射关系。因此，我们可以先训练好一个teacher网络，然后将teacher的网络的输出结果 <strong>q</strong> 作为student网络的目标，训练student网络，使得student网络的结果 <strong>p</strong>  接近 <strong>q</strong> 。这里CE是交叉熵（Cross Entropy），<strong>y</strong>是真实标签，对于分类任务就是one-hot编码，q是teacher网络的输出结果，p是student网络的输出结果。</p><p><strong>Summary：</strong></p><p>知识蒸馏，可以将一个网络的知识转移到另一个网络，两个网络可以是同构或者异构。做法是先训练一个teacher网络，然后使用这个teacher网络的输出和数据的真实标签去训练student网络。知识蒸馏，可以用来将网络从大网络转化成一个小网络，并保留接近于大网络的性能；也可以将多个网络的学到的知识转移到一个网络中，使得单个网络的性能接近ensemble的结果。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;Model-Compression-Paper-Reading&quot;&gt;&lt;a href=&quot;#Model-Compression-Paper-Reading&quot; class=&quot;headerlink&quot; title=&quot;Model Compression Paper Readin
+      
+    
+    </summary>
+    
+    
+      <category term="Works" scheme="http://canVa4.github.io/categories/Works/"/>
+    
+    
+      <category term="Model Compression" scheme="http://canVa4.github.io/tags/Model-Compression/"/>
+    
+  </entry>
   
   <entry>
     <title>Model Compression overview and resources</title>
