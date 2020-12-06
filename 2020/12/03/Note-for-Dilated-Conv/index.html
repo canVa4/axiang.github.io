@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Note for Dilated Conv | Xiang's Blog</title><meta name="description" content="Note for Dilated Conv最近在做edge detection类型的任务，在edge detection领域，也开始使用了很多semantic segmentation的方法；其中一类就是Dilated Con. 这里特此汇总一下相关的学习资源，和自己在阅读和学习时的心得。 Resources:各种资源汇总： Blogs: 总结-空洞卷积(Dilated&#x2F;Atrous Convol"><meta name="keywords" content="Deep Learning,CV,Segmentation"><meta name="author" content="阿翔"><meta name="copyright" content="阿翔"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/assets/Radiohead.jpg"><link rel="canonical" href="http://canva4.github.io/2020/12/03/Note-for-Dilated-Conv/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="Note for Dilated Conv"><meta property="og:url" content="http://canva4.github.io/2020/12/03/Note-for-Dilated-Conv/"><meta property="og:site_name" content="Xiang's Blog"><meta property="og:description" content="Note for Dilated Conv最近在做edge detection类型的任务，在edge detection领域，也开始使用了很多semantic segmentation的方法；其中一类就是Dilated Con. 这里特此汇总一下相关的学习资源，和自己在阅读和学习时的心得。 Resources:各种资源汇总： Blogs: 总结-空洞卷积(Dilated&#x2F;Atrous Convol"><meta property="og:image" content="https://i.loli.net/2020/12/02/ojTmcJvQiIMV8ep.png"><meta property="article:published_time" content="2020-12-03T02:23:16.000Z"><meta property="article:modified_time" content="2020-12-06T13:13:59.816Z"><meta name="twitter:card" content="summary"><script><!-- hexo-inject:begin --><!-- hexo-inject:end -->var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: {"limitCount":50,"languages":{"author":"作者: 阿翔","link":"链接: ","source":"来源: Xiang's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020-12-06 21:13:59'
+}</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img {
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 5.0.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="alternate" href="/atom.xml" title="Xiang's Blog" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" data-lazy-src="https://i.loli.net/2020/09/06/hCrie9pkUMQRzsg.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">18</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">22</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Note-for-Dilated-Conv"><span class="toc-number">1.</span> <span class="toc-text">Note for Dilated Conv</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Resources"><span class="toc-number">2.</span> <span class="toc-text">Resources:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Blogs"><span class="toc-number">2.1.</span> <span class="toc-text">Blogs:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Papers"><span class="toc-number">2.2.</span> <span class="toc-text">Papers:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Others"><span class="toc-number">2.3.</span> <span class="toc-text">Others:</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Note"><span class="toc-number">3.</span> <span class="toc-text">Note:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Paper-Reading"><span class="toc-number">3.1.</span> <span class="toc-text">Paper Reading:</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-Scale-Context-Aggregation-by-Dilated-Convolutions-2016"><span class="toc-number">3.1.1.</span> <span class="toc-text">Multi-Scale Context Aggregation by Dilated Convolutions 2016</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Others-1"><span class="toc-number">3.2.</span> <span class="toc-text">Others:</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Coding-For-Dliated-Conv"><span class="toc-number">3.2.1.</span> <span class="toc-text">Coding For Dliated Conv</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Compute-the-Output-Size-of-Dilated-Conv%EF%BC%9F"><span class="toc-number">3.2.2.</span> <span class="toc-text">How to Compute the Output Size of Dilated Conv？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Compute-the-Receptive-Field-of-Diltaed-Conv"><span class="toc-number">3.2.3.</span> <span class="toc-text">How to Compute the Receptive Field of Diltaed Conv?</span></a></li></ol></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/12/02/ojTmcJvQiIMV8ep.png)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Xiang's Blog</a></span><span class="pull-right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Note for Dilated Conv</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-12-03T02:23:16.000Z" title="发表于 2020-12-03 10:23:16">2020-12-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-12-06T13:13:59.816Z" title="更新于 2020-12-06 21:13:59">2020-12-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Works/">Works</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Works/Papers/">Papers</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="Note-for-Dilated-Conv"><a href="#Note-for-Dilated-Conv" class="headerlink" title="Note for Dilated Conv"></a>Note for Dilated Conv</h1><p>最近在做edge detection类型的任务，在edge detection领域，也开始使用了很多semantic segmentation的方法；其中一类就是Dilated Con. 这里特此汇总一下相关的学习资源，和自己在阅读和学习时的心得。</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><h1 id="Resources"><a href="#Resources" class="headerlink" title="Resources:"></a>Resources:</h1><p>各种资源汇总：</p>
+<h2 id="Blogs"><a href="#Blogs" class="headerlink" title="Blogs:"></a>Blogs:</h2><ol>
+<li>总结-空洞卷积(Dilated/Atrous Convolution)  <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/50369448">知乎专栏LINK</a> 【深度好文】 包含了Dilated Conv问题的讨论。</li>
+<li>如何理解空洞卷积（dilated convolution）？ <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/54149221/answer/323880412">知乎提问LINK</a></li>
+<li>Semantic Segmentation学习流程 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/145009250">https://zhuanlan.zhihu.com/p/145009250</a> <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/76603228">https://zhuanlan.zhihu.com/p/76603228</a>  <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/27794982">https://zhuanlan.zhihu.com/p/27794982</a></li>
+<li>DeepLab 模型</li>
+</ol>
+<h2 id="Papers"><a href="#Papers" class="headerlink" title="Papers:"></a>Papers:</h2><ol>
+<li>Multi-Scale Context Aggregation by Dilated Convolutions 2016 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1511.07122">LINK</a></li>
+<li>Dilated Residual Networks 2017 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1705.09914">LINK</a></li>
+<li>DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs 2017 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1606.00915">LINK</a></li>
+<li>Rethinking Atrous Convolution for Semantic Image Segmentation 2017 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.05587">LINK</a></li>
+<li>Understanding Convolution for Semantic Segmentation 2018 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1702.08502">LINK</a></li>
+</ol>
+<h2 id="Others"><a href="#Others" class="headerlink" title="Others:"></a>Others:</h2><ol>
+<li>《A guide to convolution arithmetic for deep learning》 and gifs <a target="_blank" rel="noopener" href="https://github.com/vdumoulin/conv_arithmetic">github LINK</a></li>
+</ol>
+<h1 id="Note"><a href="#Note" class="headerlink" title="Note:"></a>Note:</h1><p>本部分是上面资源or paper学习后的note.</p>
+<h2 id="Paper-Reading"><a href="#Paper-Reading" class="headerlink" title="Paper Reading:"></a>Paper Reading:</h2><p>本部分是一些经典paper阅读后的note.</p>
+<h3 id="Multi-Scale-Context-Aggregation-by-Dilated-Convolutions-2016"><a href="#Multi-Scale-Context-Aggregation-by-Dilated-Convolutions-2016" class="headerlink" title="Multi-Scale Context Aggregation by Dilated Convolutions 2016"></a>Multi-Scale Context Aggregation by Dilated Convolutions 2016</h3><p>Author: Fisher Yu 2016  <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1511.07122">LINK</a>  第一篇提出空洞卷积的方法。空洞卷积是下面的那篇BDCN使用到了，这也是我第一次了解这个卷积操作。</p>
+<p>Journal: ICLR 2016</p>
+<p><strong>提出Dilated Conv的paper. 一种专门design for dense prediction（例如：semantic segmentation）的方法</strong></p>
+<p>这种空洞卷积（Dilated Conv）<strong>support exponential expansion of the receptive field without loss of resolution or coverage!</strong></p>
+<p>作者还指出，将这种Dilated Conv可以作为插入模块，来提升这种dense prediction的性能。</p>
+<p><strong>总结：</strong></p>
+<p>Dilated Conv的好处：</p>
+<ul>
+<li><strong>扩大感受野</strong>：在deep net中为了增加感受野且降低计算量，总要进行降采样(pooling或s2/conv)，这样虽然可以增加感受野，但空间分辨率降低了。为了能不丢失分辨率，且仍然扩大感受野，可以使用空洞卷积。这在检测，分割任务中十分有用。一方面感受野大了可以检测分割大目标，另一方面分辨率高了可以精确定位目标。</li>
+<li><strong>捕获多尺度上下文信息：</strong>空洞卷积有一个参数可以设置dilation rate，当设置不同dilation rate时，感受野就会不一样，也即获取了多尺度（multi-scale）信息。</li>
+</ul>
+<p>所以我们可以对于一个feature map使用几组不同dilation rate和padding的dilated Conv来让获取multi-scale信息，之后再concatenate并过一个conv聚合并学习这样的multi-scale的信息。</p>
+<p><strong>而语义分割（semantic segmentation）由于需要获得较大的分辨率图，因此经常在网络的最后两个stage，取消降采样操作，之后采用空洞卷积弥补丢失的感受野。</strong></p>
+<p><strong>背景：</strong></p>
+<p>在图像分割领域，图像输入到CNN（典型的网络比如FCN）中，FCN先像传统的CNN那样对图像做卷积再pooling，降低图像（feature）尺寸的同时增大感受野，但是由于图像分割预测是pixel-wise的输出，所以要将pooling后较小的图像尺寸upsampling到原始的图像尺寸进行预测（upsampling一般采用deconv反卷积操作），之前的pooling操作使得每个pixel预测都能看到较大感受野信息。因此图像分割FCN中有两个关键，一个是pooling减小图像尺寸增大感受野，另一个是upsampling扩大图像尺寸。在先减小再增大尺寸的过程中，肯定有一些信息损失掉了，那么能不能设计一种新的操作，不通过pooling也能有较大的感受野看到更多的信息呢？答案就是dilated conv。</p>
+<p><strong>Detail About Dilated Conv：</strong></p>
+<p>对于公式化卷积的过程可以如下所示。</p>
+<p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2020/12/02/x4Upe38VFKAMzLm.png" alt="image-20201202204630447"></p>
+<p>其使用的卷积核与普通CNN一直，只不过对于每一个Dilated Conv存在一个factor l.</p>
+<p>下图就是Dilated Conv的一个直观实例，也显示出了其特点：<strong>The number of parameters associated with each layer is identical. The receptive field grows exponentially while the number of parameters grows linearly.</strong></p>
+<p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2020/12/02/V1mB5KvAc8dSpMr.png" alt="image-20201202210406002"></p>
+<p>dilated的好处是不做pooling损失信息的情况下，加大了感受野，让每个卷积输出都包含较大范围的信息。在图像需要全局信息或者语音文本需要较长的sequence信息依赖的问题中，都能很好的应用dilated conv。</p>
+<p>下图是传统的卷积：或者说是1-dilated Conv</p>
+<p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2020/12/03/kUItGT1vOV3oZrd.png" alt="image-20201202211039151"></p>
+<p>而下图是2-dilated Conv</p>
+<p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2020/12/02/ojTmcJvQiIMV8ep.png" alt="image-20201202211056595"></p>
+<p><strong>值得注意的是这里的这里对于filter的初始化不能是随机的。</strong></p>
+<h2 id="Others-1"><a href="#Others-1" class="headerlink" title="Others:"></a>Others:</h2><h3 id="Coding-For-Dliated-Conv"><a href="#Coding-For-Dliated-Conv" class="headerlink" title="Coding For Dliated Conv"></a>Coding For Dliated Conv</h3><p>若使用pytorch的话，非常简单，在现有的conv2d中已经支持了参数Dilation这个参数，当其为1是（默认值），此时就是正常的卷积。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">1</span>, <span class="number">3</span>, stride=<span class="number">1</span>, bias=<span class="literal">False</span>, dilation=<span class="number">1</span>)  *<span class="comment"># 普通卷积* </span></span><br><span class="line"></span><br><span class="line">conv2 = nn.Conv2d(<span class="number">1</span>, <span class="number">1</span>, <span class="number">3</span>, stride=<span class="number">1</span>, bias=<span class="literal">False</span>, dilation=<span class="number">2</span>)  *<span class="comment"># dilation就是空洞率，即间隔*</span></span><br></pre></td></tr></table></figure>
+
+<p>其本质可以看成是对于filter的一个扩展，将filter中间填入0。</p>
+<p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2020/12/03/RBUs4ZoV8D5Xynh.png" alt="image-20201203103831461"></p>
+<h3 id="How-to-Compute-the-Output-Size-of-Dilated-Conv？"><a href="#How-to-Compute-the-Output-Size-of-Dilated-Conv？" class="headerlink" title="How to Compute the Output Size of Dilated Conv？"></a>How to Compute the Output Size of Dilated Conv？</h3><p>首先回顾一下标准CNN的计算，设输入feature map尺寸为$(H,W)$，卷积核的大小为: $(K_h,K_w)$, stride为: $(S_h, S_w)$, Padding为 P.</p>
+<p>所以标准CNN的输出size就是:</p>
+<p>$$H_{new} = \frac{H-K_h+2P}{S_h} + 1, W_{new} = \frac{W-K_w+2P}{S_w} + 1$$</p>
+<p>而Dilated Conv可以看成将卷积核填充0. 设 dilatation rate  = r.</p>
+<p>正常情况下$H=W=F, K_h=K_w=K, S_h=S_w=S$</p>
+<p>所以新的kernel的大小为: $K_{new} = K + (K-1)(r-1)$，所以dilated Conv的输出size为:</p>
+<p> $$F_{new} = \frac{F-K_{new}+2P}{S}+1 = \frac{F-(K + (K-1)(r-1))+2P}{S}+1$$</p>
+<h3 id="How-to-Compute-the-Receptive-Field-of-Diltaed-Conv"><a href="#How-to-Compute-the-Receptive-Field-of-Diltaed-Conv" class="headerlink" title="How to Compute the Receptive Field of Diltaed Conv?"></a>How to Compute the Receptive Field of Diltaed Conv?</h3><p>A Blog’s Link <a target="_blank" rel="noopener" href="http://shawnleezx.github.io/blog/2017/02/11/calculating-receptive-field-of-cnn/">LINK</a></p>
+<p>CNN感受域的的计算如下：从这个公式可以看到，相比前一层，当前层的感受野大小在两层之间增加，这是一个指数级增加。</p>
+<p>$$F_i=(F_{i-1}-1) \cdot stride+K_{size}$$</p>
+<p>$F_i$为第i层的感受野，stride为第i层的stride，$K_{size}$为卷积核或池化核尺寸。</p>
+<p>对于Dilated Conv，其本质可以理解为在卷积核里补充0，即将原始的K变为$K_{new} = K + (K-1)(r-1)$，再带入公式计算即可。</p>
+<p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2020/12/06/wqpZ3C2Ktms9JYf.png" alt="image-20201203112630801"></p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">阿翔</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://canva4.github.io/2020/12/03/Note-for-Dilated-Conv/">http://canva4.github.io/2020/12/03/Note-for-Dilated-Conv/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://canVa4.github.io" target="_blank">Xiang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Deep-Learning/">Deep Learning</a><a class="post-meta__tags" href="/tags/CV/">CV</a><a class="post-meta__tags" href="/tags/Segmentation/">Segmentation</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/12/02/ojTmcJvQiIMV8ep.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2020/11/28/Model-Compression-Paper-Reading/"><img class="next-cover" data-lazy-src="https://i.loli.net/2020/11/19/7vzxb8FC2GrXQpN.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Model Compression Paper Reading</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2020/10/23/Crack-Detection-Paper-Reading/" title="Crack Detection Paper Reading"><img class="relatedPosts_cover" data-lazy-src="https://i.loli.net/2020/10/27/xZvIdywqWML7Gg4.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fas fa-history fa-fw"></i> 2020-12-06</div><div class="relatedPosts_title">Crack Detection Paper Reading</div></div></a></div></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By 阿翔</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my Blog~</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    loader: {
+      source: {
+        '[tex]/amsCd': '[tex]/amscd'
+      }
+    },
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  var script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({{ JSON.stringify(config) }});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="{{ src }}">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end --></body></html>
