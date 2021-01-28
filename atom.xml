@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://canva4.github.io/"/>
-  <updated>2020-12-11T13:48:01.529Z</updated>
+  <updated>2021-01-28T08:41:21.186Z</updated>
   <id>http://canva4.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Mobile Manipulator Intro &amp; Resource</title>
+    <link href="http://canva4.github.io/2021/01/27/Mobile-Manipulator-Intro-Resource/"/>
+    <id>http://canva4.github.io/2021/01/27/Mobile-Manipulator-Intro-Resource/</id>
+    <published>2021-01-27T15:15:35.000Z</published>
+    <updated>2021-01-28T08:41:21.186Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Mobile-Manipulator-Intro-amp-Resource"><a href="#Mobile-Manipulator-Intro-amp-Resource" class="headerlink" title="Mobile Manipulator Intro &amp; Resource"></a>Mobile Manipulator Intro &amp; Resource</h1><p>关于Mobile Manipulator的一些偏向于survey的介绍和一些资源汇总。</p><h2 id="Papers"><a href="#Papers" class="headerlink" title="Papers"></a>Papers</h2><p>主要是survey相关的paper</p><ol><li>Mobile Manipulation Tutorial 2020</li><li>Ros navigation tuning guide 2017</li></ol><h1 id="Mobile-Manipulator-Intro"><a href="#Mobile-Manipulator-Intro" class="headerlink" title="Mobile Manipulator Intro"></a>Mobile Manipulator Intro</h1><p>组成：robotics arm + mobile robotic platform</p><p>最简单、最常见的具体形式：</p><ul><li>wheeled base 底盘</li><li>6 自由度（DoF）机械臂</li><li>平行二指夹爪</li></ul><p>典型例子：Fetch：7DoF机械臂，躯干可提升，pitch, yaw head with an RGB-D camera &amp; 2D Laser Scanner.</p><p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2021/01/28/V6ANwU5pyzWk4jS.png" alt="image-20210127233150657"></p><p>其他常见传感器</p><ul><li>激光雷达：用于mapping</li><li>RGB-D Camera：用于object recognition and localization</li></ul><p>因为目前短期内的任务是尽快的实现一个在虚拟环境的task，所以这里重点关注一些现有的、已经发行的公开的软件工具包和仿真器。</p><h2 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h2><p>最简单也最经典的任务：<strong>Fetch  &amp; Place</strong></p><p>为做简单处理，将path planning, arm planning和task planning分开进行，现在一些更新的方法是将它们结合进行规划，也是我们最终的目标。</p><p>因此，我们可以将问题分为移动机器人部分（负责将机器人驱动到某个位置），操纵部分（寻找要拾取的对象和相应的手臂动作）。当然也要包括简单的人机交互部分。</p><p>对于一个最简单的Fetch &amp; Place的task，常见的流程如下：</p><ol><li>drive to a given location</li><li>identify and grasp a specified object</li><li>drive to a different location</li><li>place the object on a specific QR code（目前使用QR code来定位是最最常见的方案）</li></ol><p>这些流程可能要使用下图中所使用的技术</p><p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2021/01/28/kFdwYafePO8bp3c.png" alt="image-20210127232713306"></p><h2 id="常见仿真器"><a href="#常见仿真器" class="headerlink" title="常见仿真器"></a>常见仿真器</h2><ol><li>Gazebo–&gt; Most common used, popularity, tight integration of ROS ！</li><li>CoppeliaSim</li><li>Webots</li><li>SAPIEN</li></ol><h2 id="软件包"><a href="#软件包" class="headerlink" title="软件包"></a>软件包</h2><table><thead><tr><th>功能</th><th>Package</th></tr></thead><tbody><tr><td>Localization</td><td>AMCL等</td></tr><tr><td>Local Costmap + Path Planning +Path Flow</td><td>ROS Navigation</td></tr><tr><td>Arm Control（驱动层面的控制）</td><td>kinova_ros, fetch_ros等</td></tr><tr><td>object Detection</td><td>AprilTags，NOCS</td></tr><tr><td>object Place Pose</td><td>AprilTags</td></tr><tr><td>Arm Planning &amp; Inverse Kinematics</td><td>MoveIt</td></tr><tr><td>Grasp Planning（假设使用两指夹爪，相对简单）</td><td>—-</td></tr><tr><td>Decision Making (State machine)</td><td>FlexBE， SMACH</td></tr><tr><td>Simulator</td><td>Gazebo</td></tr><tr><td>SLAM 2D(激光雷达)</td><td>Cartographer，gmapping</td></tr><tr><td>Camera Calibration</td><td>TODO</td></tr><tr><td>Hand eye Calibration</td><td>TODO</td></tr></tbody></table><p>整体的设计逻辑使用<strong>有限状态自动机</strong>。具体行为的设计可以使用FlexBE或SMACH。</p><p>假设：环境是已知的。</p><p>对于环境的建模，就可以使用SLAM（这里给定的task环境是建好的），常见的包如：gmapping和Cartograhper。</p><p>整个路径规划的部分可以市容ROS Navigation。其中包含以下部分：Local Costmap: 为了驱动到地图中指定的2D坐标，ROS导航正在构建成costmap（global和local），将提供的地图与当前扫描得到数据结合在一起。 然后，global path planner规划到坐标的路径，同时考虑机器人的运动学约束（机器人底盘的差动方式和机器人尺寸）。local path planner则主要负责避开在global planner规划的路径上的障碍。</p><p>当机器人达到目标地点，开始执行pick的任务时，这时候一般就需要适用到RGB-D相机了。一般来讲：彩色图像用于识别物体，而深度数据对于计算物体的6D位姿非常重要。</p><p>对于object detection可以使用：AprilTags（有ROS的包），NOCS（2019年新方法，也有ROS的包）<strong>算法细节TODO</strong></p><p>下图为AprilTags</p><p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2021/01/28/KL1ZCDkIze5jtJX.png" alt="image-20210128111936725"></p><p>下图为：NOCS</p><p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2021/01/28/mUr4CDvX326QiTP.png" alt="image-20210128105854315"></p><p>一旦检测到物体的方位，就要进行grasp planning了，即找到一个最优的方法来抓取目标物体。因为这里使用的是两指夹爪，最简单方案就是对齐中心，然后抓就可以了。更advanced的算法和包：<strong>TODO</strong>。</p><p>arm planning &amp; control：ROS MoveIt。最主流的实现方法，需要知道机械臂的参数、碰撞信息等。其本质功能就是进行运动学反解（Inverse Kinematics）。细节：<strong>TODO</strong></p><p>一些待调研的问题：</p><ul><li>相机校准</li></ul><p><img src= "/img/loading.gif" data-lazy-src="https://i.loli.net/2021/01/28/z9mySbJh5nkI6jA.png" alt="image-20210128111547824"></p><ul><li>手眼协调</li><li>…</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;Mobile-Manipulator-Intro-amp-Resource&quot;&gt;&lt;a href=&quot;#Mobile-Manipulator-Intro-amp-Resource&quot; class=&quot;headerlink&quot; title=&quot;Mobile Manipulator
+      
+    
+    </summary>
+    
+    
+      <category term="Works" scheme="http://canVa4.github.io/categories/Works/"/>
+    
+    
+      <category term="Mobile Manipulator" scheme="http://canVa4.github.io/tags/Mobile-Manipulator/"/>
+    
+  </entry>
   
   <entry>
     <title>Note for Dilated Conv</title>
@@ -375,9 +401,9 @@
     <link href="http://canva4.github.io/2020/08/08/Python%E5%AD%A6%E4%B9%A0%E6%9D%82%E8%AE%B0-1/"/>
     <id>http://canva4.github.io/2020/08/08/Python%E5%AD%A6%E4%B9%A0%E6%9D%82%E8%AE%B0-1/</id>
     <published>2020-08-08T13:09:52.000Z</published>
-    <updated>2020-08-15T13:03:30.917Z</updated>
+    <updated>2021-01-25T16:43:34.322Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Python学习杂记-1"><a href="#Python学习杂记-1" class="headerlink" title="Python学习杂记(1)"></a>Python学习杂记(1)</h1><p>本篇文章是为了记录进一步学习python时遇到的一些问题和相对陌生的知识点。</p><ul><li><p>range()函数返回的是一个独特的“范围类”对象！</p></li><li><p>for 变量 in 字符串|集合|范围|任何可迭代对象:</p><p> <strong>可迭代对象：指该对象中包含一个–iter–方法</strong></p></li><li><p><strong>isinstance()函数</strong>，判断某个变量是否为指定类型的实例，前一个参数是要判断的变量，后一个参数是类型。如：isinstance(2, int)</p></li><li><p>zip()函数，将多个列表压缩为一个zip对象（可迭代对象），这样就可以使用一个循环遍历两个列表</p></li><li><p>reversed()函数：接受序列（元组、列表、区间等），然后返回一个“反序排列”的迭代器，sorted()类似</p></li><li></li></ul>]]></content>
+    <content type="html"><![CDATA[<h1 id="Python学习杂记-1"><a href="#Python学习杂记-1" class="headerlink" title="Python学习杂记(1)"></a>Python学习杂记(1)</h1><p>本篇文章是为了记录进一步学习python时遇到的一些问题和相对陌生的知识点。</p><ul><li><p>range()函数返回的是一个独特的“范围类”对象！</p></li><li><p>for 变量 in 字符串|集合|范围|任何可迭代对象:</p><p> <strong>可迭代对象：指该对象中包含一个–iter–方法</strong></p></li><li><p><strong>isinstance()函数</strong>，判断某个变量是否为指定类型的实例，前一个参数是要判断的变量，后一个参数是类型。如：isinstance(2, int)</p></li><li><p>zip()函数，将多个列表压缩为一个zip对象（可迭代对象），这样就可以使用一个循环遍历两个列表</p></li><li><p>reversed()函数：接受序列（元组、列表、区间等），然后返回一个“反序排列”的迭代器，sorted()类似</p></li><li></li></ul><h1 id="Chapter-5-函数和Lambda表达式"><a href="#Chapter-5-函数和Lambda表达式" class="headerlink" title="Chapter 5 函数和Lambda表达式"></a>Chapter 5 函数和Lambda表达式</h1><ol><li>函数的参数收集（个数可变的参数），可以在调用函数时传入任意多个参数） P105</li></ol><p>在形参前面添加一个*，多个参数当做元组传入。一般都放在形参的末尾。如果放在前面，需要将后面的参数均使用<strong>关键字参数的</strong>方式输入。此种方法输入的参数被看为<strong>元组</strong></p><p>在形参前面添加**，多个参数当做<strong>字典</strong>传入。</p><ol start="2"><li>逆向参数收集 P106</li></ol><p>指的是程序在已有列表、元组、字典等对象的前提下，把他们的元素“拆开后”传给函数的参数。拆开元组使用*，拆开字典使用**。如：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">def test(name, *num):</span><br><span class="line">    print(&#39;user:&#39;, name)</span><br><span class="line">    print(&#39;say:&#39;, num)</span><br><span class="line">mytuple &#x3D; (1,2,3)</span><br><span class="line"></span><br><span class="line">test(&#39;canVa4&#39;,mytuple)</span><br><span class="line"></span><br><span class="line">res&gt;&gt;&gt;&gt;</span><br><span class="line">user:canVa4</span><br><span class="line">say: (1,2,3)</span><br></pre></td></tr></table></figure><ol start="3"><li>locals()和globals()函数 P111</li></ol><p>可以globals()方法在函数内部访问全局变量（同名的被hide的全局变量）</p><ol start="4"><li>global关键字</li></ol><p>可以global关键字在函数内部声明已经定义好的全局变量</p><ol start="5"><li>局部函数&amp;nonlocal关键字 P114</li></ol><p>在函数体内定义的函数。默认对外部是隐藏的</p><ol start="6"><li>函数变量 与 将函数作为函数的参数 P115</li><li>将函数作为返回值 P116</li></ol><h1 id="Chapter-6-类和对象"><a href="#Chapter-6-类和对象" class="headerlink" title="Chapter 6 类和对象"></a>Chapter 6 类和对象</h1><ol><li>对象的动态性   P123</li></ol><p>对对象（实例化后）的可以增加实例变量，直接赋值即可；同时也可以用del函数，删除对象（实例化后）的在构造函数__init__中定义的函数）。</p><p>NOTE：也可以定义动态实例方法，但是不会将自身自动传入self参数（第一个参数），再调用时需手动输入。若想可以自动填入，需要MethodType()函数</p><ol start="2"><li>类也可以调用实例方法</li></ol><p>但！！此时不会自动填入第一个self参数（第一个自动填入调用者本身，而类没有实例，所以也没法自动填入）。所以在使用类调用实例方法时，需要手动填入第一个self参数。</p><ol start="3"><li>类方法与静态方法（主要使用类来直接调用） P128</li></ol><p>使用@classmethod修饰的是类方法，使用@staticmethod修饰的是静态方法</p><ol start="4"><li>@函数修饰器</li></ol>]]></content>
     
     <summary type="html">
     
