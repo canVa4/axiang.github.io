@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://canva4.github.io/2021/08/19/ROS%E6%9D%82%E8%AE%B0/</loc>
+    
+    <lastmod>2021-08-19</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://canva4.github.io/2021/03/05/Mobile-Manipulator-Paper-Reading/</loc>
     
     <lastmod>2021-05-20</lastmod>
@@ -376,6 +383,13 @@
   
   <url>
     <loc>http://canva4.github.io/tags/Neural-ODE/</loc>
+    <lastmod>2021-08-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://canva4.github.io/tags/ROS/</loc>
     <lastmod>2021-08-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
