@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://canva4.github.io/"/>
-  <updated>2021-08-19T16:01:09.982Z</updated>
+  <updated>2021-08-29T02:31:55.066Z</updated>
   <id>http://canva4.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Nullspace for Robotics</title>
+    <link href="http://canva4.github.io/2021/08/29/Nullspace-for-Robotics/"/>
+    <id>http://canva4.github.io/2021/08/29/Nullspace-for-Robotics/</id>
+    <published>2021-08-29T02:01:37.000Z</published>
+    <updated>2021-08-29T02:31:55.066Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Nullspace-for-robotics"><a href="#Nullspace-for-robotics" class="headerlink" title="Nullspace for robotics"></a>Nullspace for robotics</h1><p>首先机器人的零空间与线性代数的中的零空间（nullspace）还是有所不同的，线性代数的nullspace指的是: $Ax=0$中$x$的所有解构成了A矩阵的nullspace，有时也称为“核”。</p><p>机器人的零空间则一般指的是：雅克比矩阵（Jacobian）的零空间。</p><p>机器人在完成任务的时候，会将任务最终分解成位姿伺服问题或者力/力矩伺服问题。而零空间内的机器人关节运动将不会影响主任务的完成。直观来讲就是：<strong>当末端保持不动，而其他关节可转动时，这些所有能转动的位形即构成零空间。</strong></p><p>首先给出几点基本的认识：</p><p>​     a) 机器人零空间内的运动只会改变整个机器人身体的姿态不会改变；</p><p>​     b) 机器人的零空间是相对主任务定的，也就是说主任务变了，零空间也会随之改变；</p><p>​     c) 冗余自由度越多，零空间可以调整的余地越大，否则零空间的优化效果较弱；对于冗余机器人，由于机器人自由度大于空间自由度，因此在任何时候都能出现；</p><p>​    d) 对于非冗余的情况，当机器人自由度大于要控制的空间自由度时，也会出现/存在零空间（如只控制末端位置而不管姿态的情况下）</p><p>也就是零空间为：$J(q)\dot{q}=0$中所有$\dot q$的集合</p><h2 id="零空间的特性："><a href="#零空间的特性：" class="headerlink" title="零空间的特性："></a>零空间的特性：</h2><p> 只要机械臂的关节速度$\dot q$在其雅克比矩阵的零空间中，那么end-effector的速度总是零（保持静止）。</p><p>$$\dot x = J \dot q$$</p><p>$$\dot q = J^+\dot x+(I-J^+J)\dot\theta$$  （上式解更广义表达形式）</p><p>其中$J^+$为$J$的伪逆，$\dot\theta$为任意关节角速度向量，$$(I-J^+J)$$为零空间投影矩阵。</p><p>那么对于一个有冗余自由度的机器人，假设你除了要控制end effector运动到某一位置，还要保证过程中它的手肘不碰到障碍物，那你总是可以在nullspace中找到一组解满足你的要求：在不改变end effector轨迹的同时避开障碍物。</p><p>进一步来了解一下$(I-J^+J)$这个矩阵，一般来讲在有冗余自由度的机器人中$(I-J^+J)$并不为0。$(I-J^+J)$相当于一个“过滤器”，把与控制$\dot x$无关的机器人自由度过滤掉。</p><h2 id="零空间控制与任务优先级"><a href="#零空间控制与任务优先级" class="headerlink" title="零空间控制与任务优先级"></a>零空间控制与任务优先级</h2><p>非常好的blog <a href="https://zhuanlan.zhihu.com/p/164738620">https://zhuanlan.zhihu.com/p/164738620</a></p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol><li><a href="https://blog.csdn.net/u013528298/article/details/80558315">https://blog.csdn.net/u013528298/article/details/80558315</a></li><li><a href="https://blog.csdn.net/weixin_43455581/article/details/108125280">https://blog.csdn.net/weixin_43455581/article/details/108125280</a></li><li><a href="https://cloud.tencent.com/developer/article/1627898">https://cloud.tencent.com/developer/article/1627898</a></li><li><a href="https://zhuanlan.zhihu.com/p/164738620">https://zhuanlan.zhihu.com/p/164738620</a> 基于零空间方法（NUB）的whole body control</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;Nullspace-for-robotics&quot;&gt;&lt;a href=&quot;#Nullspace-for-robotics&quot; class=&quot;headerlink&quot; title=&quot;Nullspace for robotics&quot;&gt;&lt;/a&gt;Nullspace for roboti
+      
+    
+    </summary>
+    
+    
+      <category term="Works" scheme="http://canVa4.github.io/categories/Works/"/>
+    
+    
+      <category term="Robotics" scheme="http://canVa4.github.io/tags/Robotics/"/>
+    
+  </entry>
   
   <entry>
     <title>ROS杂记</title>
@@ -559,32 +585,6 @@
       <category term="arduino" scheme="http://canVa4.github.io/tags/arduino/"/>
     
       <category term="STM32" scheme="http://canVa4.github.io/tags/STM32/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python学习杂记(1)</title>
-    <link href="http://canva4.github.io/2020/08/08/Python%E5%AD%A6%E4%B9%A0%E6%9D%82%E8%AE%B0-1/"/>
-    <id>http://canva4.github.io/2020/08/08/Python%E5%AD%A6%E4%B9%A0%E6%9D%82%E8%AE%B0-1/</id>
-    <published>2020-08-08T13:09:52.000Z</published>
-    <updated>2021-01-31T12:24:01.965Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Python学习杂记-1"><a href="#Python学习杂记-1" class="headerlink" title="Python学习杂记(1)"></a>Python学习杂记(1)</h1><p>本篇文章是为了记录进一步学习python时遇到的一些问题和相对陌生的知识点。</p><ul><li><p>range()函数返回的是一个独特的“范围类”对象！</p></li><li><p>for 变量 in 字符串|集合|范围|任何可迭代对象:</p><p> <strong>可迭代对象：指该对象中包含一个–iter–方法</strong></p></li><li><p><strong>isinstance()函数</strong>，判断某个变量是否为指定类型的实例，前一个参数是要判断的变量，后一个参数是类型。如：isinstance(2, int)</p></li><li><p>zip()函数，将多个列表压缩为一个zip对象（可迭代对象），这样就可以使用一个循环遍历两个列表</p></li><li><p>reversed()函数：接受序列（元组、列表、区间等），然后返回一个“反序排列”的迭代器，sorted()类似</p></li><li></li></ul><h1 id="Chapter-5-函数和Lambda表达式"><a href="#Chapter-5-函数和Lambda表达式" class="headerlink" title="Chapter 5 函数和Lambda表达式"></a>Chapter 5 函数和Lambda表达式</h1><ol><li>函数的参数收集（个数可变的参数），可以在调用函数时传入任意多个参数） P105</li></ol><p>在形参前面添加一个*，多个参数当做元组传入。一般都放在形参的末尾。如果放在前面，需要将后面的参数均使用<strong>关键字参数的</strong>方式输入。此种方法输入的参数被看为<strong>元组</strong></p><p>在形参前面添加**，多个参数当做<strong>字典</strong>传入。</p><ol start="2"><li>逆向参数收集 P106</li></ol><p>指的是程序在已有列表、元组、字典等对象的前提下，把他们的元素“拆开后”传给函数的参数。拆开元组使用*，拆开字典使用**。如：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">def test(name, *num):</span><br><span class="line">    print(&#39;user:&#39;, name)</span><br><span class="line">    print(&#39;say:&#39;, num)</span><br><span class="line">mytuple &#x3D; (1,2,3)</span><br><span class="line"></span><br><span class="line">test(&#39;canVa4&#39;,mytuple)</span><br><span class="line"></span><br><span class="line">res&gt;&gt;&gt;&gt;</span><br><span class="line">user:canVa4</span><br><span class="line">say: (1,2,3)</span><br></pre></td></tr></table></figure><ol start="3"><li>locals()和globals()函数 P111</li></ol><p>可以globals()方法在函数内部访问全局变量（同名的被hide的全局变量）</p><ol start="4"><li>global关键字</li></ol><p>可以global关键字在函数内部声明已经定义好的全局变量</p><ol start="5"><li>局部函数&amp;nonlocal关键字 P114</li></ol><p>在函数体内定义的函数。默认对外部是隐藏的</p><ol start="6"><li>函数变量 与 将函数作为函数的参数 P115</li><li>将函数作为返回值 P116</li></ol><h1 id="Chapter-6-类和对象"><a href="#Chapter-6-类和对象" class="headerlink" title="Chapter 6 类和对象"></a>Chapter 6 类和对象</h1><ol><li>对象的动态性   P123</li></ol><p>对对象（实例化后）的可以增加实例变量，直接赋值即可；同时也可以用del函数，删除对象（实例化后）的在构造函数__init__中定义的函数）。</p><p>NOTE：也可以定义动态实例方法，但是不会将自身自动传入self参数（第一个参数），再调用时需手动输入。若想可以自动填入，需要MethodType()函数</p><ol start="2"><li>类也可以调用实例方法</li></ol><p>但！！此时不会自动填入第一个self参数（第一个自动填入调用者本身，而类没有实例，所以也没法自动填入）。所以在使用类调用实例方法时，需要手动填入第一个self参数。</p><ol start="3"><li>类方法与静态方法（主要使用类来直接调用） P128</li></ol><p>使用@classmethod修饰的是类方法，使用@staticmethod修饰的是静态方法</p><ol start="4"><li>@函数修饰器 P128 一个更好的解释说明 <a href="https://www.runoob.com/w3cnote/python-func-decorators.html">LINK</a></li><li>类变量和实例变量</li></ol><p>类变量是直接在类里面定义的变量（注意在类里面函数中定义的变量不是类变量！！！）</p><ol start="6"><li>property函数与property修饰器  P135</li><li>类的封装和隐藏  P137  python本质并没有隐藏的功能！！！ 可以在方法和变量前面增加__（两个下划线）起隐藏的效果（但仍可以直接访问到）</li><li>用super()可以直接调用父类方法，或者使用父类类名来调用父类方法 <a href="https://www.runoob.com/python/python-func-super.html">LINK</a></li><li>python的动态特性 P143 即：类可以动态的增加：方法、属性和变量等。</li><li>使用__slot__()可以限制动态的添加，slot更多细节  P144</li><li>python还可以动态的创建类：使用type()函数</li><li>mateclass 更好的教程：LINK[<a href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017592449371072]">https://www.liaoxuefeng.com/wiki/1016959663602400/1017592449371072]</a></li></ol><p>metaclass，直译为元类，简单的解释就是：当我们定义了类以后，就可以根据这个类创建出实例，所以：先定义类，然后创建实例。</p><p>但是如果我们想创建出类呢？那就必须根据metaclass创建出类，所以：先定义metaclass，然后创建类。</p><p>连接起来就是：先定义metaclass，就可以创建类，最后创建实例。所以，metaclass允许你创建类或者修改类。换句话说，你可以把类看成是metaclass创建出来的“实例”。</p><p><strong>NOTE: 基本用不到</strong></p><ol start="13"><li>可以使用issubclass()和isinstance()来判断是不是某个类的子类 或 一个实例是否为某个类的实例</li><li>每个类都有一个__bases__属性（用来给出其父类）和一个__subclasses__()方法用来给出其直接子类</li><li><strong>枚举类</strong>  P150</li></ol><p>指一个类的对象（实例）是有限且固定的  更好的教程<a href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017595944503424">LINK</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;Python学习杂记-1&quot;&gt;&lt;a href=&quot;#Python学习杂记-1&quot; class=&quot;headerlink&quot; title=&quot;Python学习杂记(1)&quot;&gt;&lt;/a&gt;Python学习杂记(1)&lt;/h1&gt;&lt;p&gt;本篇文章是为了记录进一步学习python时遇到的一些问题
-      
-    
-    </summary>
-    
-    
-      <category term="Notes" scheme="http://canVa4.github.io/categories/Notes/"/>
-    
-    
-      <category term="python" scheme="http://canVa4.github.io/tags/python/"/>
     
   </entry>
   
